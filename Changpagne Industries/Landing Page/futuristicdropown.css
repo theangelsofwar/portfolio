@@ -1,0 +1,131 @@
+@import "compass/css3";
+
+@import url(https://fonts.googleapis.com/css?family=Rajdhani:300);
+
+$colorWhite: rgba(255,255,255,1);
+$colorDamnLight: rgba(0,220,220,1);
+$colorLight: rgba(0,190,190,1);
+$colorDark: rgba(60,60,60,1);
+$colorBlack: rgba(33,33,33,1);
+$fontSize: 18px;
+
+html, body {
+  overflow: hidden;
+  background: url(http://aaronchuo.cc/assets/images/ironwall.jpg) #000 top center no-repeat;
+  background-size: 100% 100%;
+  width: 100%;
+  height: 100%;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 18px;
+  letter-spacing: .1em;
+}
+
+.glow {
+  @include box-shadow(
+    0 0 25px $colorDamnLight,
+    0 1px 5px $colorBlack
+  );
+  border-color: $colorDamnLight;
+  background: $colorDamnLight;
+  color: rgba($colorBlack, .7);
+}
+
+.scifiUI {
+  width: 300px;
+  margin: 100px auto;
+  
+  &:hover {
+    h1 {
+      @extend .glow;
+      
+      &:after {
+        border-top-color: rgba($colorBlack, .7);
+      }
+    }
+    ul li {
+      @include transform(skew(0));
+      @extend .glow;
+      width: 300px;
+      height: 50px;
+
+      @for $i from 1 through 7 {
+        &:nth-child(#{$i}) {
+          left: 0;
+        }
+      }
+    }
+  }
+  
+  * {
+    @include transition(all 300ms ease-in-out);
+  }
+  
+  h1 {
+    position: relative;
+    display: block;
+    width: 300px;
+    height: 50px;
+    line-height: 50px;
+    border: 1px solid $colorLight;
+    background: rgba($colorLight, .2);
+    color: $colorLight;
+    font-size: 1.6em;
+    text-align: center;
+    cursor: pointer;
+    
+    &:after {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 20px;
+      right: 15px;
+      border-top: 10px solid $colorLight;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-bottom: 0;
+    }
+  }
+  
+  ul {
+    list-style: none;
+    position: relative;
+    top: -20px;
+    
+    li {
+      @include transform3d(
+        skew(45deg)
+        scaleY(-3)
+      );
+      @include box-shadow(0 3px 0 5px $colorBlack inset);
+      position: absolute;
+      display: block;
+      width: 200px;
+      height: 50px;
+      line-height: 50px;
+      border: 1px solid $colorLight;
+      background: $colorDamnLight;
+      text-align: center;
+      font-size: 1.6em;
+      cursor: pointer;
+      
+      @for $i from 1 through 7 {
+        &:nth-child(#{$i}) {
+          top: 50px * ($i - 1);
+          @if $i % 2 == 0 {
+            left: 500%;
+          } @else {
+            left: -500%;
+          }
+        }
+      }
+    
+      &:hover {
+        @include transform3d(
+          scale(1.08)
+        );
+        font-size: 1.8em;
+        z-index: 99;
+      }
+    }
+  }
+}

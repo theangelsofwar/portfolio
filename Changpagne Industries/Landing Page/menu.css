@@ -1,0 +1,23 @@
+@import url(https://fonts.googleapis.com/css?family=Inconsolata:400,700);
+#menu {
+  font-size: 24px;
+  letter-spacing: 8px;
+  color: lightgrey;
+  position:absolute;
+  text-align: center;
+  width:100%;
+  top:85%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+
+.link {
+  display: inline-block;
+  padding: 0 6%;
+}
+
+.link:hover {
+  color: purple;
+}
