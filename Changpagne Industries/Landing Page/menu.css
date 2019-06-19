@@ -1,23 +1,23 @@
-@import url(https://fonts.googleapis.com/css?family=Inconsolata:400,700);
-#menu {
-  font-size: 24px;
-  letter-spacing: 8px;
-  color: lightgrey;
-  position:absolute;
+ul.topnav {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+ul.topnav li {float: left;}
+
+ul.topnav li a {
+  display: block;
+  color: white;
   text-align: center;
-  width:100%;
-  top:85%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 2;
+  padding: 14px 16px;
+  text-decoration: none;
 }
 
+ul.topnav li a:hover:not(.active) {background-color: #111;}
 
-.link {
-  display: inline-block;
-  padding: 0 6%;
-}
+ul.topnav li a.active {background-color: #4CAF50;}
 
-.link:hover {
-  color: purple;
-}
+ul.topnav li.right {float: right;}

@@ -1,0 +1,92 @@
+/*@import "compass/css3";*/
+
+@import url(https://fonts.googleapis.com/css?family=PT+Sans+Narrow:700);
+
+
+
+/*
+* {
+  box-sizing: border-box;
+}
+*/
+
+
+html {
+  background: url('https://images.unsplash.com/photo-1545727303-83cede79596a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1189&q=80') no-repeat center center fixed;
+  background-size: cover;
+}
+
+body {
+  font-family: "Orbitron", sans-serif;
+}
+
+/*
+nav {
+  background: rgba(210,200,220, 0.4);
+  margin: 3em 2rem;
+}*/
+
+
+.nav-center {  
+    text-align: center;
+    ul.nav {
+      display: inline-block;
+      li {
+        display: inline
+        a {
+          float: left
+        }
+      }
+    }
+  }
+
+
+  /*
+nav ul {
+  list-style: none;
+}
+
+nav ul li {
+  display: inline-block;
+  text-transform: uppercase;
+  font-size: 1.5rem;
+  letter-spacing: 0.05rem;
+}
+
+nav ul li a {
+  display: inline-block;
+  padding: 1rem;
+  color: #000;
+  text-decoration: none;
+  transition: transform 0.3s ease 0s;
+  transform-origin: 50% 0px 0px;
+  transform-style: preserve-3d;
+}
+
+nav ul li a.current {
+  color: silver;
+}
+
+nav ul li a:hover {
+  background: rgba(111,111,111, 0.8);
+  color: #000;
+  transform: rotateX(90deg) translateY(-23px);
+}
+
+nav ul li a::before {
+  position: absolute;
+  top: 100%;
+  left: 0px;
+  width: 100%;
+  padding: 4px 0px;
+  text-align: center;
+  line-height: 50px;
+  background: none repeat scroll 0% 0% #7a267c;
+  color: #FFF;
+  content: attr(data-hover);
+  transition: rgb(22, 22, 80) 0.3s ease 0s;
+  transform: rotateX(-90deg);
+  transform-origin: 50% 0px 0px;
+}
+
+*/
