@@ -1,0 +1,162 @@
+<style>
+  .site-header__logo img {
+    max-width: {{ section.settings.logo_width | escape | default: '180' | remove: 'px' | append: 'px' }};
+  }
+  @media screen and (max-width: 749px) {
+    .site-header__logo img {
+      max-width: 100%;
+    }
+  }
+</style>
+
+<header class="site-header" role="banner" data-section-id="{{ section.id }}" data-section-type="header-section">
+  <div class="grid grid--no-gutters grid--table site-header__inner">
+    <div class="grid__item one-third medium-up--one-sixth">
+      <button type="button" class="site-header__link text-link site-header__toggle-nav js-drawer-open-left">
+        <span class="icon icon-hamburger" aria-hidden="true"></span>
+        <span class="icon__fallback-text">{{ 'layout.navigation.menu' | t }}</span>
+      </button>
+    </div>
+    <div class="grid__item one-third medium-up--two-thirds">
+      <div class="site-header__logo h1" itemscope itemtype="http://schema.org/Organization">
+
+        {%- if template.name == "index" -%}
+          {%- if section.settings.logo_slideshow != blank -%}
+            <a href="/" itemprop="url" class="site-header__logo-link">
+              {% capture image_size %}{{ section.settings.logo_width | escape }}x{% endcapture %}
+              <img class="site-header__logo-image" src="{{ section.settings.logo_slideshow | img_url: image_size }}"
+              srcset="{{ section.settings.logo_slideshow | img_url: image_size }} 1x, {{ section.settings.logo_slideshow | img_url: image_size, scale: 2 }} 2x" alt="{{ shop.name }}" itemprop="logo">
+            </a>
+          {%- endif -%}
+        {%- else -%}
+          {%- if section.settings.logo != blank -%}
+            <a href="/" itemprop="url" class="site-header__logo-link">
+              {% capture image_size %}{{ section.settings.logo_width | escape }}x{% endcapture %}
+              <img class="site-header__logo-image" src="{{ section.settings.logo | img_url: image_size }}"
+              srcset="{{ section.settings.logo | img_url: image_size }} 1x, {{ section.settings.logo | img_url: image_size, scale: 2 }} 2x" alt="{{ shop.name }}" itemprop="logo">
+            </a>
+          {%- else -%}
+            <a href="/" class="site-header__link site-header__logo-link" itemprop="url">{{ shop.name }}</a>
+          {%- endif -%}
+        {%- endif -%}
+
+      </div>
+    </div>
+
+    <div class="grid__item one-third medium-up--one-sixth text-right">
+      <a href="/search" class="site-header__link site-header__search js-drawer-open-top">
+        <span class="icon icon-search" aria-hidden="true"></span>
+        <span class="icon__fallback-text">{{ 'layout.navigation.search' | t }}</span>
+      </a>
+      <a href="/cart" class="site-header__link site-header__cart cart-link{% if settings.cart_type == 'drawer' %} js-drawer-open-right{% endif %}{% if cart.item_count > 0 %} cart-bubble--visible{% endif %}">
+        <span class="icon icon-cart" aria-hidden="true"></span>
+        <span class="icon__fallback-text">{{ 'layout.cart.title' | t }}</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+
+{% schema %}
+{
+  "name": {
+    "de": "Titel",
+    "en": "Header",
+    "es": "Encabezado",
+    "fr": "En-tête",
+    "it": "Header",
+    "ja": "ヘッダー",
+    "nl": "Koptekst",
+    "pt-BR": "Cabeçalho",
+    "zh-CN": "标头",
+    "zh-TW": "標頭"
+  },
+  "class": "header-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": {
+        "de": "Logo",
+        "en": "Logo",
+        "es": "Logotipo",
+        "fr": "Logo",
+        "it": "Logo",
+        "ja": "ロゴ",
+        "nl": "Logo",
+        "pt-BR": "Logotipo",
+        "zh-CN": "logo",
+        "zh-TW": "商標"
+      },
+      "info": {
+        "de": "Maximal 450 x 200 Pixel",
+        "en": "450 x 200px max",
+        "es": "450 x 200px máx.",
+        "fr": "450 x 250 px max",
+        "it": "450 x 200 px max",
+        "ja": "最大450 x 200ピクセル",
+        "nl": "450 x 200px max",
+        "pt-BR": "450 x 200 px máx.",
+        "zh-CN": "最大 450 x 200 px",
+        "zh-TW": "最大 450 x 200 像素"
+      }
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_slideshow",
+      "label": {
+        "de": "Startseitenlogo",
+        "en": "Home page logo",
+        "es": "Logotipo de la página de inicio",
+        "fr": "Logo de la page d'accueil",
+        "it": "Logo della home page",
+        "ja": "ホームページのロゴ",
+        "nl": "Logo startpagina",
+        "pt-BR": "Logotipo da página inicial",
+        "zh-CN": "主页 logo",
+        "zh-TW": "首頁商標"
+      },
+      "info": {
+        "de": "In Slideshow anzeigen",
+        "en": "Shown on slideshow",
+        "es": "Mostrado en diapositivas",
+        "fr": "Affiché sur le diaporama",
+        "it": "Mostrato sulla presentazione",
+        "ja": "スライドショーに表示する",
+        "nl": "Weergegeven op diavoorstelling",
+        "pt-BR": "Exibido em slides",
+        "zh-CN": "显示在幻灯片上",
+        "zh-TW": "投影片輪播"
+      }
+    },
+    {
+      "type": "text",
+      "id": "logo_width",
+      "label": {
+        "de": "Benutzerdefinierte Logobreite (Pixel)",
+        "en": "Custom logo width (in pixels)",
+        "es": "Ancho del logotipo personalizado (en píxeles)",
+        "fr": "Largeur personnalisée du logo (en pixels)",
+        "it": "Larghezza logo personalizzato (in pixel)",
+        "ja": "ロゴの幅をカスタムする（ピクセルで）",
+        "nl": "Aangepaste logobreedte (in pixels)",
+        "pt-BR": "Largura do logotipo personalizado (em pixels)",
+        "zh-CN": "自定义 logo 宽度（像素）",
+        "zh-TW": "自訂標誌寬度 (單位為像素)"
+      },
+      "default": {
+        "de": "180",
+        "en": "180",
+        "es": "180",
+        "fr": "180",
+        "it": "180",
+        "ja": "180",
+        "nl": "180",
+        "pt-BR": "180",
+        "zh-CN": "180",
+        "zh-TW": "180"
+      }
+    }
+  ]
+}
+{% endschema %}

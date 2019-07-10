@@ -1,0 +1,336 @@
+<!-- /templates/search.liquid -->
+{% comment %}
+
+  To return only products or pages in results:
+    - http://docs.shopify.com/manual/configuration/store-customization/return-only-product-in-storefront-search-results
+    - Or manually add type=product or type=page to the search URL as a parameter
+
+{% endcomment %}
+{% include 'product-grid-width' with product_image_type: section.settings.product_image_type, product_image_size: section.settings.product_image_size %}
+
+{% paginate search.results by 10 %}
+
+  {% if search.performed %}
+    {% if search.results_count == 0 %}
+      <h1 class="search-title h2">{{ 'general.search.no_results_html' | t: terms: search.terms }}</h1>
+    {% endif %}
+  {% else %}
+    {% assign product_count = shop.products_count %}
+    <h1 class="search-title search-title--form h2">{{ 'general.search.title' | t: count: product_count }}</h1>
+    <hr class="hr--clear">
+      <div class="text-center">
+        <form action="/search" method="get" role="search">
+          <div class="input-group">
+            <input type="search" id="SearchInput" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'general.search.placeholder' | t }}" aria-label="{{ 'general.search.placeholder' | t }}" class="input-group__field" autofocus>
+            <button class="btn input-group__btn" type="submit">{{ 'general.search.submit' | t }}</button>
+          </div>
+        </form>
+      </div>
+    <hr class="hr--clear">
+  {% endif %}
+
+  {% if search.performed %}
+    {% comment %}
+      Set grid item widths based on settings
+    {% endcomment %}
+
+    <div class="grid grid--uniform grid--no-gutters">
+      {% for item in search.results %}
+        {% comment %}
+          If a search item has a price, it's a product
+        {% endcomment %}
+
+        <div class="product-item search-item grid__item {{ grid_item_width }}">
+          {% if item.object_type == 'product' %}
+            <div class="product-item__link-wrapper">
+              <a class="product-item__link {% if section.settings.product_image_spacing %} product-item__image--margins{% endif %}" href="{{ item.url }}">
+                {% if item.featured_image %}
+                  <noscript>
+                    <img class="product-item__image-no-js" src="{{ item.featured_image | img_url: '1024x' }}" alt="{{ item.featured_image.alt | escape }}">
+                  </noscript>
+                  <div class="product-item__image-container" style="max-width: {{ 600 | times: item.featured_image.aspect_ratio | round }}px;">
+                    <div class="product-item__image-wrapper" style="padding-top:{{ 1 | divided_by: item.featured_image.aspect_ratio | times: 100}}%">
+                    {% assign img_url = item.featured_image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' %}
+                      <img class="product-item__image lazyload"
+                        src="{{ item.featured_image | img_url: '300x300' }}"
+                        data-src="{{ img_url }}"
+                        data-widths="[360, 540, 720, 900, 1080, 1296, 1512, 1728, 1944, 2048, 4472]"
+                        data-aspectratio="{{ item.featured_image.aspect_ratio }}"
+                        data-sizes="auto"
+                        alt="{{ item.featured_image.alt | escape }}">
+                    </div>
+                  </div>
+                {% else %}
+                  <img src="{{ item.featured_image.src | img_url: '1024x' }}" alt="{{ item.featured_image.alt | escape }}">
+                {% endif %}
+
+                {% comment %}
+                  Product item details
+                {% endcomment %}
+                {% assign itemPrice = item.price | money_without_trailing_zeros %}
+                <div class="product-item__meta">
+                  <div class="product-item__meta__inner">
+                    {% if section.settings.vendor_enable %}
+                      <p class="product-item__vendor">{{ item.vendor }}</p>
+                    {% endif %}
+                    <p class="product-item__title">{{ item.title }}</p>
+                    <p>
+                      {% if item.compare_at_price > item.price %}
+                        <span class="visually-hidden">{{ 'products.general.regular_price' | t }}</span>
+                        <s class="product-item__price--reg">{{ item.compare_at_price | money_without_trailing_zeros }}</s>
+                        <span class="product-item__price--sale">{{ 'products.general.now_price_html' | t: price: itemPrice }}</span>
+                      {% else %}
+                        {% if item.price_varies %}
+                          {{ 'products.general.from_text_html' | t: price: itemPrice }}
+                        {% else %}
+                          {% if item.compare_at_price > item.price %}
+                            <span class="visually-hidden">{{ 'products.general.sale_price' | t }}</span>
+                          {% else %}
+                            <span class="visually-hidden">{{ 'products.general.regular_price' | t }}</span>
+                          {% endif %}
+                          {{ item.price | money_without_trailing_zeros }}
+                        {% endif %}
+                      {% endif %}
+                    </p>
+
+                    {% unless item.available %}
+                      <p class="product-item__sold-out">{{ 'products.product.sold_out' | t }}</p>
+                    {% endunless %}
+                  </div>
+                </div>
+
+                {% comment %}
+                  If on sale, add a badge
+                {% endcomment %}
+                {% if item.compare_at_price > item.price %}
+                  {% assign sale_text_length = 'products.product.on_sale' | t | size %}
+                  <span class="product-item__badge {% if sale_text_length > 6 %}product-item__badge--large{% endif %}">
+                    {{ 'products.product.on_sale' | t }}
+                  </span>
+                {% endif %}
+              </a>
+            </div>
+          {% else %}
+            <div class="grid grid--table search-item__table">
+              <div class="grid__item search-item__cell">
+                {% if item.image %}
+                  <a href="{{ item.url }}">{{ item | img_url: 'large' | img_tag: item.title }}</a>
+                {% endif %}
+                <h3>
+                  <a href="{{ item.url }}">{{ item.title }}</a>
+                </h3>
+                <p>
+                  {{ item.content | strip_html | truncate: 120 }}
+                  <a href="{{ item.url }}">{{ 'general.search.read_more' | t }}</a>
+                </p>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+
+      {% endfor %}
+    </div>
+
+    {% if paginate.pages > 1 %}
+      {% include 'pagination' %}
+    {% endif %}
+
+  {% endif %}
+
+{% endpaginate %}
+
+
+
+{% schema %}
+{
+  "name": {
+    "de": "Suchen",
+    "en": "Search",
+    "es": "Buscar",
+    "fr": "Rechercher",
+    "it": "Cerca",
+    "ja": "検索",
+    "nl": "Zoeken",
+    "pt-BR": "Pesquisa",
+    "zh-CN": "搜索",
+    "zh-TW": "搜尋"
+  },
+  "class": "search-template-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": {
+        "de": "Darstellung",
+        "en": "Appearance",
+        "es": "Apariencia",
+        "fr": "Apparence",
+        "it": "Aspetto",
+        "ja": "外観",
+        "nl": "Uiterlijk",
+        "pt-BR": "Aparência",
+        "zh-CN": "外观",
+        "zh-TW": "外觀"
+      }
+    },
+    {
+      "type": "select",
+      "id": "product_image_type",
+      "label": {
+        "de": "Bildstil",
+        "en": "Image style",
+        "es": "Estilo de imagen",
+        "fr": "Style d'image",
+        "it": "Stile immagine",
+        "ja": "画像スタイル",
+        "nl": "Afbeeldingsstijl",
+        "pt-BR": "Estilo da imagem",
+        "zh-CN": "图片样式",
+        "zh-TW": "圖片樣式"
+      },
+      "options": [
+        {
+          "value": "portrait",
+          "label": {
+            "de": "Hoch/Quadrat",
+            "en": "Tall/square",
+            "es": "Alta/cuadrada",
+            "fr": "Grand/carré",
+            "it": "Verticale/quadrata",
+            "ja": "縦長/正方形",
+            "nl": "Hoog/vierkant",
+            "pt-BR": "Alto/quadrado",
+            "zh-CN": "高/正方形",
+            "zh-TW": "高/正方形"
+          }
+        },
+        {
+          "value": "landscape",
+          "label": {
+            "de": "Breit",
+            "en": "Wide",
+            "es": "Ancho",
+            "fr": "Large",
+            "it": "Orizzontale",
+            "ja": "横長",
+            "nl": "Breed",
+            "pt-BR": "Grande",
+            "zh-CN": "宽",
+            "zh-TW": "寬"
+          }
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "product_image_size",
+      "label": {
+        "de": "Foto-Größe",
+        "en": "Image size",
+        "es": "Tamaño de la imagen",
+        "fr": "Taille de l'image",
+        "it": "Dimensione immagine",
+        "ja": "画像のサイズ",
+        "nl": "Afbeeldingsformaat",
+        "pt-BR": "Tamanho da imagem",
+        "zh-CN": "图片尺寸",
+        "zh-TW": "圖片尺寸"
+      },
+      "default": "medium",
+      "options": [
+        {
+          "value": "small",
+          "label": {
+            "de": "Klein",
+            "en": "Small",
+            "es": "Pequeña",
+            "fr": "Petite",
+            "it": "Small",
+            "ja": "小",
+            "nl": "Klein",
+            "pt-BR": "Pequeno",
+            "zh-CN": "小",
+            "zh-TW": "小型"
+          }
+        },
+        {
+          "value": "medium",
+          "label": {
+            "de": "Mitte",
+            "en": "Medium",
+            "es": "Mediana",
+            "fr": "Moyenne",
+            "it": "Medium",
+            "ja": "中",
+            "nl": "Gemiddeld",
+            "pt-BR": "Médio",
+            "zh-CN": "中等",
+            "zh-TW": "中等"
+          }
+        },
+        {
+          "value": "large",
+          "label": {
+            "de": "Groß",
+            "en": "Large",
+            "es": "Grande",
+            "fr": "Grande",
+            "it": "Large",
+            "ja": "大",
+            "nl": "Groot",
+            "pt-BR": "Grande",
+            "zh-CN": "大",
+            "zh-TW": "大型"
+          }
+        },
+        {
+          "value": "xlarge",
+          "label": {
+            "de": "Extra groß",
+            "en": "Extra large",
+            "es": "Extra grande",
+            "fr": "Très grande",
+            "it": "Extra large",
+            "ja": "特大",
+            "nl": "Extra groot",
+            "pt-BR": "Extra grande",
+            "zh-CN": "特大",
+            "zh-TW": "超大型"
+          }
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "product_image_spacing",
+      "label": {
+        "de": "Abstände zwischen Bildern hinzufügen",
+        "en": "Add spacing between images",
+        "es": "Agregar espacio entre las imágenes",
+        "fr": "Ajouter un espacement entre les images",
+        "it": "Aggiungi spaziatura tra le immagini",
+        "ja": "画像に間隔を追加する",
+        "nl": "Spatiëring tussen afbeeldingen toevoegen",
+        "pt-BR": "Adicione espaçamento entre as imagens",
+        "zh-CN": "在图片之间添加间距",
+        "zh-TW": "在圖片之間新增間距"
+      }
+    },
+    {
+      "type": "checkbox",
+      "id": "vendor_enable",
+      "label": {
+        "de": "Produktverkäufer anzeigen",
+        "en": "Show product vendor",
+        "es": "Mostrar proveedor del producto",
+        "fr": "Afficher le distributeur du produit",
+        "it": "Mostra fornitore prodotto",
+        "ja": "商品の販売元を表示する",
+        "nl": "Productleverancier weergeven",
+        "pt-BR": "Exiba o fornecedor do produto",
+        "zh-CN": "显示产品厂商",
+        "zh-TW": "顯示產品廠商"
+      }
+    }
+  ]
+}
+{% endschema %}

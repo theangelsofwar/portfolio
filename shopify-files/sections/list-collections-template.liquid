@@ -1,0 +1,422 @@
+{% comment %}
+
+  This page represents the /collections and /products pages.
+
+  More info:
+    - http://docs.shopify.com/manual/configuration/store-customization/taking-control-of-collections-listing
+
+{% endcomment %}
+
+{% comment %}
+  Loop through each collection, except 'frontpage'
+{% endcomment %}
+
+{% assign collection_count = 0 %}
+{% for collection in collections %}
+  {% unless collection.handle == 'frontpage' %}
+    {% assign collection_count = collection_count | plus:1 %}
+  {% endunless %}
+{% endfor %}
+
+{% comment %}
+  Set grid item widths based on settings
+{% endcomment %}
+
+{% include 'product-grid-width' with product_image_type: section.settings.collection_image_type, product_image_size: section.settings.collection_image_size %}
+
+<div class="grid grid--no-gutters collection-grid">
+  {% if section.settings.display_type == 'all' %}
+    {% case section.settings.sort %}
+      {% when 'products_high' or 'products_low' %}
+        {%- assign collections = collections | sort: 'all_products_count' -%}
+      {% when 'date' or 'date_reversed' %}
+        {%- assign collections = collections | sort: 'published_at' -%}
+    {% endcase %}
+    {% if section.settings.sort == 'products_low' or section.settings.sort == 'date' or section.settings.sort == 'alphabetical' %}
+      {% for collection in collections %}
+        {% unless collection.handle == 'frontpage' %}
+          {% include 'collection-grid-item' %}
+        {% endunless %}
+      {% endfor %}
+    {% else %}
+      {% for collection in collections reversed %}
+        {% unless collection.handle == 'frontpage' %}
+          {% include 'collection-grid-item' %}
+        {% endunless %}
+      {% endfor %}
+    {% endif %}
+  {% else %}
+    {% for block in section.blocks %}
+      {%- assign collection = collections[block.settings.collection] -%}
+      {% include 'collection-grid-item' %}
+    {% endfor %}
+  {% endif %}
+</div>
+
+
+
+{% schema %}
+{
+  "name": {
+    "de": "Kategorien-Liste Seite",
+    "en": "Collections list page",
+    "es": "Pág lista de colecciones",
+    "fr": "Liste des collections",
+    "it": "Elenco collezioni",
+    "ja": "コレクションリストのページ",
+    "nl": "Pagina Collectielijst",
+    "pt-BR": "Lista de coleções",
+    "zh-CN": "产品系列列表页面",
+    "zh-TW": "商品系列清單頁面"
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": {
+        "de": "Alle kategorien sind automatisch gelistet. Zum Ändern der Liste wählen Sie 'Ausgewählt' und fügen Sie Kategorien hinzu.",
+        "en": "All of your collections are listed by default. To customize your list, choose 'Selected' and add collections.",
+        "es": "Todas tus colecciones se muestran por defecto. Para personalizar tu lista, elige 'Seleccionadas' y agrega colecciones.",
+        "fr": "Toutes vos collections sont listées par défaut. Pour personnaliser votre liste, cliquez sur « Sélection » et ajoutez des collections.",
+        "it": "Tutte le collezioni vengono elencate per impostazione predefinita. Per personalizzare il tuo elenco, scegli \"Selezionato\" e aggiungi delle collezioni.",
+        "ja": "すべてのコレクションがデフォルトで一覧表示されます。一覧をカスタマイズするには、「選択済み」を選択してコレクションを追加します。",
+        "nl": "Standaard worden al uw collecties weergegeven. Kies Geselecteerd en voeg collecties toe om de lijst aan te passen.",
+        "pt-BR": "Todas as suas coleções são listadas por padrão. Para personalizar sua lista, escolha \"Selecionado\" e adicione coleções.",
+        "zh-CN": "默认情况下列出您的所有产品系列。若要自定义列表，请选择“已选择”并添加产品系列。",
+        "zh-TW": "系統預設會將您所有的商品系列都列入清單。如果想自訂清單，請點選「已選取」並新增商品系列。"
+      }
+    },
+    {
+      "type": "radio",
+      "id": "display_type",
+      "label": {
+        "de": "Kategorien auswählen, die angezeigt werden sollen",
+        "en": "Select collections to show",
+        "es": "Selecciona colecciones para mostrar",
+        "fr": "Sélectionner les collections à afficher",
+        "it": "Seleziona le collezioni da mostrare",
+        "ja": "表示するコレクションを選択する",
+        "nl": "Collecties selecteren om weer te geven",
+        "pt-BR": "Selecione coleções para exibir",
+        "zh-CN": "选择要显示的产品系列",
+        "zh-TW": "選取欲顯示的商品系列"
+      },
+      "default": "all",
+      "options": [
+        {
+          "value": "all",
+          "label": {
+            "de": "Alle",
+            "en": "All",
+            "es": "Todas",
+            "fr": "Toutes",
+            "it": "Tutte",
+            "ja": "すべて",
+            "nl": "Alle",
+            "pt-BR": "Todos",
+            "zh-CN": "所有",
+            "zh-TW": "全部"
+          }
+        },
+        {
+          "value": "selected",
+          "label": {
+            "de": "Ausgewählt",
+            "en": "Selected",
+            "es": "Seleccionadas",
+            "fr": "Sélection",
+            "it": "Selezionato",
+            "ja": "選択済み",
+            "nl": "Geselecteerd",
+            "pt-BR": "Selecionado",
+            "zh-CN": "已选",
+            "zh-TW": "已選取"
+          }
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "sort",
+      "label": {
+        "de": "Kategorien sortieren nach:",
+        "en": "Sort collections by:",
+        "es": "Ordenar colecciones por:",
+        "fr": "Trier les collections par :",
+        "it": "Ordina le collezioni per:",
+        "ja": "コレクションの並べ替え方法:",
+        "nl": "Collecties sorteren op:",
+        "pt-BR": "Ordenar coleções por:",
+        "zh-CN": "产品系列排序依据：",
+        "zh-TW": "以下列方式排序商品系列："
+      },
+      "info": {
+        "de": "Sortieren funktioniert nur, wenn 'Alle' ausgewählt ist",
+        "en": "Sorting only applies when 'All' is selected",
+        "es": "La función ordenar solo se aplica cuando se selecciona \"Todas\"",
+        "fr": "Le tri ne s'applique que lorsque « Toutes » est sélectionné",
+        "it": "L'ordinamento viene applicato solo quanto è selezionato \"Tutto\"",
+        "ja": "「すべて」が選択されている場合にのみ並べ替えを適用する",
+        "nl": "Sorteren is alleen van toepassing als Alles is geselecteerd",
+        "pt-BR": "A classificação só se aplica quando \"Tudo\" está selecionado",
+        "zh-CN": "仅在选择“全部”时应用排序",
+        "zh-TW": "只有在選擇「全部」的時候才能排序"
+      },
+      "default": "alphabetical",
+      "options": [
+        {
+          "value": "products_high",
+          "label": {
+            "de": "Produktanzahl, hoch zu niedrig",
+            "en": "Product count, high to low",
+            "es": "Recuento de productos, de mayor a menor",
+            "fr": "Nombre de produits, par ordre décroissant",
+            "it": "Conteggio decrescente prodotti",
+            "ja": "商品数の多い順",
+            "nl": "Aantal producten, van hoog naar laag",
+            "pt-BR": "Contagem de produtos, alta para baixa",
+            "zh-CN": "产品数量，从高到低",
+            "zh-TW": "產品數量，從高到低"
+          }
+        },
+        {
+          "value": "products_low",
+          "label": {
+            "de": "Produktanzahl, niedrig zu hoch",
+            "en": "Product count, low to high",
+            "es": "Recuento de productos, de menor a mayor",
+            "fr": "Nombre de produits, par ordre croissant",
+            "it": "Conteggio crescente prodotti",
+            "ja": "商品数の少ない順",
+            "nl": "Aantal producten, van laag naar hoog",
+            "pt-BR": "Contagem de produtos, baixa para alta",
+            "zh-CN": "产品数量，从低到高",
+            "zh-TW": "產品數量，從低到高"
+          }
+        },
+        {
+          "value": "alphabetical",
+          "label": {
+            "de": "Alphabetisch, A-Z",
+            "en": "Alphabetically, A-Z",
+            "es": "Alfabéticamente, A-Z",
+            "fr": "Alphabétique, de A à Z",
+            "it": "In ordine alfabetico, A - Z",
+            "ja": "アルファベット順, A-Z",
+            "nl": "Alfabetisch: A-Z",
+            "pt-BR": "Ordem alfabética, A–Z",
+            "zh-CN": "按字母顺序排序，A-Z",
+            "zh-TW": "依字母順序 A 到 Z"
+          }
+        },
+        {
+          "value": "alphabetical_reversed",
+          "label": {
+            "de": "Alphabetisch, Z-A",
+            "en": "Alphabetically, Z-A",
+            "es": "Alfabéticamente, Z-A",
+            "fr": "Alphabétique, de Z à A",
+            "it": "In ordine alfabetico, Z - A",
+            "ja": "アルファベット順, Z-A",
+            "nl": "Alfabetisch: Z-A",
+            "pt-BR": "Ordem alfabética, Z–A",
+            "zh-CN": "按字母顺序排序，Z-A",
+            "zh-TW": "依字母順序 Z 到 A"
+          }
+        },
+        {
+          "value": "date",
+          "label": {
+            "de": "Datum, alt zu neu",
+            "en": "Date, old to new",
+            "es": "Fecha: antiguo(a) a reciente",
+            "fr": "Date, de la plus ancienne à la plus récente",
+            "it": "Data, dal più vecchio al più recente",
+            "ja": "古い商品順",
+            "nl": "Datum: oud naar nieuw",
+            "pt-BR": "Data, mais antiga primeiro",
+            "zh-CN": "日期从旧到新",
+            "zh-TW": "日期 (從舊到新)"
+          }
+        },
+        {
+          "value": "date_reversed",
+          "label": {
+            "de": "Datum, neu zu alt",
+            "en": "Date, new to old",
+            "es": "Fecha: reciente a antiguo(a)",
+            "fr": "Date, de la plus récente à la plus ancienne",
+            "it": "Data, dal più recente al più vecchio",
+            "ja": "新着順",
+            "nl": "Datum: nieuw naar oud",
+            "pt-BR": "Data, mais recente primeiro",
+            "zh-CN": "日期从新到旧",
+            "zh-TW": "日期 (從新到舊)"
+          }
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "collection_image_type",
+      "label": {
+        "de": "Bildstil",
+        "en": "Image style",
+        "es": "Estilo de imagen",
+        "fr": "Style d'image",
+        "it": "Stile immagine",
+        "ja": "画像スタイル",
+        "nl": "Afbeeldingsstijl",
+        "pt-BR": "Estilo da imagem",
+        "zh-CN": "图片样式",
+        "zh-TW": "圖片樣式"
+      },
+      "options": [
+        {
+          "value": "portrait",
+          "label": {
+            "de": "Hoch/Quadrat",
+            "en": "Tall/square",
+            "es": "Alta/cuadrada",
+            "fr": "Grand/carré",
+            "it": "Verticale/quadrata",
+            "ja": "縦長/正方形",
+            "nl": "Hoog/vierkant",
+            "pt-BR": "Alto/quadrado",
+            "zh-CN": "高/正方形",
+            "zh-TW": "高/正方形"
+          }
+        },
+        {
+          "value": "landscape",
+          "label": {
+            "de": "Breit",
+            "en": "Wide",
+            "es": "Ancho",
+            "fr": "Large",
+            "it": "Orizzontale",
+            "ja": "横長",
+            "nl": "Breed",
+            "pt-BR": "Grande",
+            "zh-CN": "宽",
+            "zh-TW": "寬"
+          }
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "collection_image_size",
+      "label": {
+        "de": "Foto-Größe",
+        "en": "Image size",
+        "es": "Tamaño de la imagen",
+        "fr": "Taille de l'image",
+        "it": "Dimensione immagine",
+        "ja": "画像のサイズ",
+        "nl": "Afbeeldingsformaat",
+        "pt-BR": "Tamanho da imagem",
+        "zh-CN": "图片尺寸",
+        "zh-TW": "圖片尺寸"
+      },
+      "default": "medium",
+      "options": [
+        {
+          "value": "small",
+          "label": {
+            "de": "Klein",
+            "en": "Small",
+            "es": "Pequeña",
+            "fr": "Petite",
+            "it": "Small",
+            "ja": "小",
+            "nl": "Klein",
+            "pt-BR": "Pequeno",
+            "zh-CN": "小",
+            "zh-TW": "小型"
+          }
+        },
+        {
+          "value": "medium",
+          "label": {
+            "de": "Mitte",
+            "en": "Medium",
+            "es": "Mediana",
+            "fr": "Moyenne",
+            "it": "Medium",
+            "ja": "中",
+            "nl": "Gemiddeld",
+            "pt-BR": "Médio",
+            "zh-CN": "中等",
+            "zh-TW": "中等"
+          }
+        },
+        {
+          "value": "large",
+          "label": {
+            "de": "Groß",
+            "en": "Large",
+            "es": "Grande",
+            "fr": "Grande",
+            "it": "Large",
+            "ja": "大",
+            "nl": "Groot",
+            "pt-BR": "Grande",
+            "zh-CN": "大",
+            "zh-TW": "大型"
+          }
+        },
+        {
+          "value": "xlarge",
+          "label": {
+            "de": "Extra groß",
+            "en": "Extra large",
+            "es": "Extra grande",
+            "fr": "Très grande",
+            "it": "Extra large",
+            "ja": "特大",
+            "nl": "Extra groot",
+            "pt-BR": "Extra grande",
+            "zh-CN": "特大",
+            "zh-TW": "超大型"
+          }
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": {
+        "de": "Kategorie",
+        "en": "Collection",
+        "es": "Colección",
+        "fr": "Collection",
+        "it": "Collezione",
+        "ja": "コレクション",
+        "nl": "Collectie",
+        "pt-BR": "Coleção",
+        "zh-CN": "收藏",
+        "zh-TW": "商品系列"
+      },
+      "settings": [
+        {
+          "label": {
+            "de": "Kategorie",
+            "en": "Collection",
+            "es": "Colección",
+            "fr": "Collection",
+            "it": "Collezione",
+            "ja": "コレクション",
+            "nl": "Collectie",
+            "pt-BR": "Coleção",
+            "zh-CN": "收藏",
+            "zh-TW": "商品系列"
+          },
+          "id": "collection",
+          "type": "collection"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,420 @@
+
+{% paginate collection.products by 24 %}
+
+{% if collection.description != blank %}
+  <div class="rte rte--description">
+    {{ collection.description }}
+  </div>
+{% endif %}
+
+
+{% if section.settings.collection_sort_enable or section.settings.collection_tags_enable %}
+  <div class="action-bar-secondary">
+    {% if section.settings.collection_tags_enable and collection.all_tags.size > 1 %}
+      <div class="action-bar-secondary__dropdown action-bar-secondary--left">
+        <label for="SortTags" class="label--hidden">{{ 'collections.general.tags' | t }}</label>
+        <select name="SortTags" id="SortTags">
+          {% if current_tags %}
+            {% if collection.handle %}
+              <option value="/collections/{{ collection.handle }}">{{ 'collections.general.all_tags' | t }}</option>
+            {% elsif collection.current_type %}
+              <option value="{{ collection.current_type | url_for_type }}">{{ 'collections.general.all_tags' | t }}</option>
+            {% elsif collection.current_vendor %}
+              <option value="{{ collection.current_vendor | url_for_vendor }}">{{ 'collections.general.all_tags' | t }}</option>
+            {% endif %}
+          {% else %}
+            <option value="">{{ 'collections.general.tags' | t }}</option>
+          {% endif %}
+          {% for tag in collection.all_tags %}
+            <option value="/collections/{% if collection.handle != blank %}{{ collection.handle }}{% else %}all{% endif %}/{{ tag | handleize }}"{% if current_tags contains tag %} selected="selected"{% endif %}>{{ tag }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    {% endif %}
+    {% if section.settings.collection_sort_enable and collection.products.size > 1 %}
+      <div class="action-bar-secondary__dropdown action-bar-secondary--right">
+        <label for="SortBy" class="label--hidden">{{ 'collections.sorting.title' | t }}</label>
+        <select name="sort_by" id="SortBy" aria-describedby="a11y-refresh-page-message" data-value="{{ collection.sort_by | default: collection.default_sort_by | escape }}">
+          {% for option in collection.sort_options %}
+            <option value="{{ option.value }}"{% if sort_by == option.value %} selected="selected"{% endif %}>{{ option.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    {% endif %}
+  </div>
+{% endif %}
+
+{% comment %}
+  Set grid item widths based on settings
+{% endcomment %}
+
+{% include 'product-grid-width' with product_image_type: section.settings.product_image_type, product_image_size: section.settings.product_image_size %}
+
+<div class="grid collection-grid grid--uniform grid--no-gutters" data-section-id="{{ section.id }}" data-section-type="collection-template-section" data-sort-enabled="{{ section.settings.collection_sort_enable }}" data-tags-enabled="{{ section.settings.collection_tags_enable }}">
+  {% for product in collection.products %}
+    {% assign price = product.price | money_without_trailing_zeros %}
+    {% include 'product-grid-item' with product_image_spacing: section.settings.product_image_spacing, vendor_enable: section.settings.vendor_enable %}
+  {% else %}
+    {% comment %}
+      Add default products to help with onboarding for collections/all only.
+
+      The onboarding styles and products are only loaded if the
+      store has no products.
+    {% endcomment %}
+    {% if collection.handle == 'all' %}
+      <div class="grid__item">
+        <div class="helper-section">
+          <div class="grid grid--uniform grid--no-gutters helper-content">
+            {% assign collection_onboarding_index = 1 %}
+            {% for i in (1..8) %}
+              {% case i %}
+                {% when 7 %}
+                  {% assign collection_onboarding_index = 1 %}
+                {% when 8 %}
+                  {% assign collection_onboarding_index = 2 %}
+              {% endcase %}
+              <div class="product-item grid__item {{ grid_item_width }}">
+                <a class="product-item__link" href="/admin/products">
+                  {{ 'product-' | append: collection_onboarding_index | placeholder_svg_tag: 'product-item__image icon icon--placeholder' }}
+                  <span class="product-item__meta">
+                    <span class="product-item__meta__inner">
+                      <p class="product-item__title">{{ 'homepage.onboarding.product_title' | t }}</p>
+                      <p>$19.99</p>
+                    </span>
+                  </span>
+                </a>
+              </div>
+              {% assign collection_onboarding_index = collection_onboarding_index | plus: 1 %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% else %}
+      {% comment %}
+        If collection exists but is empty, display message
+      {% endcomment %}
+      <div class="grid__item text-center">
+        <p>{{ 'collections.general.no_matches' | t }}</p>
+      </div>
+    {% endif %}
+  {% endfor %}
+</div>
+
+{% if paginate.pages > 1 %}
+  {% if section.settings.pagination_type == 'numbers' %}
+    {% include 'pagination' %}
+  {% else %}
+    <div class="pagination--infinite">
+      <a href="{{ paginate.next.url }}" class="btn js-show-more">{{ 'collections.general.show_more' | t }}</a>
+    </div>
+  {% endif %}
+{% endif %}
+
+{% endpaginate %}
+
+
+
+{% schema %}
+{
+  "name": {
+    "de": "Kategorie",
+    "en": "Collection",
+    "es": "Colección",
+    "fr": "Collection",
+    "it": "Collezione",
+    "ja": "コレクション",
+    "nl": "Collectie",
+    "pt-BR": "Coleção",
+    "zh-CN": "收藏",
+    "zh-TW": "商品系列"
+  },
+  "class": "collection-template-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": {
+        "de": "Darstellung",
+        "en": "Appearance",
+        "es": "Apariencia",
+        "fr": "Apparence",
+        "it": "Aspetto",
+        "ja": "外観",
+        "nl": "Uiterlijk",
+        "pt-BR": "Aparência",
+        "zh-CN": "外观",
+        "zh-TW": "外觀"
+      }
+    },
+    {
+      "type": "select",
+      "id": "product_image_type",
+      "label": {
+        "de": "Bildstil",
+        "en": "Image style",
+        "es": "Estilo de imagen",
+        "fr": "Style d'image",
+        "it": "Stile immagine",
+        "ja": "画像スタイル",
+        "nl": "Afbeeldingsstijl",
+        "pt-BR": "Estilo da imagem",
+        "zh-CN": "图片样式",
+        "zh-TW": "圖片樣式"
+      },
+      "options": [
+        {
+          "value": "portrait",
+          "label": {
+            "de": "Hoch/Quadrat",
+            "en": "Tall/square",
+            "es": "Alta/cuadrada",
+            "fr": "Grand/carré",
+            "it": "Verticale/quadrata",
+            "ja": "縦長/正方形",
+            "nl": "Hoog/vierkant",
+            "pt-BR": "Alto/quadrado",
+            "zh-CN": "高/正方形",
+            "zh-TW": "高/正方形"
+          }
+        },
+        {
+          "value": "landscape",
+          "label": {
+            "de": "Breit",
+            "en": "Wide",
+            "es": "Ancho",
+            "fr": "Large",
+            "it": "Orizzontale",
+            "ja": "横長",
+            "nl": "Breed",
+            "pt-BR": "Grande",
+            "zh-CN": "宽",
+            "zh-TW": "寬"
+          }
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "product_image_size",
+      "label": {
+        "de": "Foto-Größe",
+        "en": "Image size",
+        "es": "Tamaño de la imagen",
+        "fr": "Taille de l'image",
+        "it": "Dimensione immagine",
+        "ja": "画像のサイズ",
+        "nl": "Afbeeldingsformaat",
+        "pt-BR": "Tamanho da imagem",
+        "zh-CN": "图片尺寸",
+        "zh-TW": "圖片尺寸"
+      },
+      "default": "medium",
+      "options": [
+        {
+          "value": "small",
+          "label": {
+            "de": "Klein",
+            "en": "Small",
+            "es": "Pequeña",
+            "fr": "Petite",
+            "it": "Small",
+            "ja": "小",
+            "nl": "Klein",
+            "pt-BR": "Pequeno",
+            "zh-CN": "小",
+            "zh-TW": "小型"
+          }
+        },
+        {
+          "value": "medium",
+          "label": {
+            "de": "Mitte",
+            "en": "Medium",
+            "es": "Mediana",
+            "fr": "Moyenne",
+            "it": "Medium",
+            "ja": "中",
+            "nl": "Gemiddeld",
+            "pt-BR": "Médio",
+            "zh-CN": "中等",
+            "zh-TW": "中等"
+          }
+        },
+        {
+          "value": "large",
+          "label": {
+            "de": "Groß",
+            "en": "Large",
+            "es": "Grande",
+            "fr": "Grande",
+            "it": "Large",
+            "ja": "大",
+            "nl": "Groot",
+            "pt-BR": "Grande",
+            "zh-CN": "大",
+            "zh-TW": "大型"
+          }
+        },
+        {
+          "value": "xlarge",
+          "label": {
+            "de": "Extra groß",
+            "en": "Extra large",
+            "es": "Extra grande",
+            "fr": "Très grande",
+            "it": "Extra large",
+            "ja": "特大",
+            "nl": "Extra groot",
+            "pt-BR": "Extra grande",
+            "zh-CN": "特大",
+            "zh-TW": "超大型"
+          }
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "product_image_spacing",
+      "label": {
+        "de": "Abstände zwischen Bildern hinzufügen",
+        "en": "Add spacing between images",
+        "es": "Agregar espacio entre las imágenes",
+        "fr": "Ajouter un espacement entre les images",
+        "it": "Aggiungi spaziatura tra le immagini",
+        "ja": "画像に間隔を追加する",
+        "nl": "Spatiëring tussen afbeeldingen toevoegen",
+        "pt-BR": "Adicione espaçamento entre as imagens",
+        "zh-CN": "在图片之间添加间距",
+        "zh-TW": "在圖片之間新增間距"
+      }
+    },
+    {
+      "type": "checkbox",
+      "id": "vendor_enable",
+      "label": {
+        "de": "Produktverkäufer anzeigen",
+        "en": "Show product vendor",
+        "es": "Mostrar proveedor del producto",
+        "fr": "Afficher le distributeur du produit",
+        "it": "Mostra fornitore prodotto",
+        "ja": "商品の販売元を表示する",
+        "nl": "Productleverancier weergeven",
+        "pt-BR": "Exiba o fornecedor do produto",
+        "zh-CN": "显示产品厂商",
+        "zh-TW": "顯示產品廠商"
+      }
+    },
+    {
+      "type": "header",
+      "content": {
+        "de": "Sortieren und Filtern",
+        "en": "Sorting & filtering",
+        "es": "Ordenar y filtrar",
+        "fr": "Tri et filtrage",
+        "it": "Ordinamento e filtri",
+        "ja": "並べ替えとフィルタリング",
+        "nl": "Sorteren en filteren",
+        "pt-BR": "Classificação e filtragem",
+        "zh-CN": "排序和筛选",
+        "zh-TW": "排序 & 篩選"
+      }
+    },
+    {
+      "type": "checkbox",
+      "id": "collection_sort_enable",
+      "label": {
+        "de": "Sortieroptionen anzeigen",
+        "en": "Show sorting options",
+        "es": "Mostrar las opciones de clasificación",
+        "fr": "Afficher les options de tri",
+        "it": "Mostra opzioni ordinamento",
+        "ja": "並べ替えオプションを表示する",
+        "nl": "Toon sorteeropties",
+        "pt-BR": "Exibir opções de classificação",
+        "zh-CN": "显示排序方式",
+        "zh-TW": "顯示排序選項"
+      }
+    },
+    {
+      "type": "checkbox",
+      "id": "collection_tags_enable",
+      "label": {
+        "de": "Filterung von Tags anzeigen",
+        "en": "Show tag filtering",
+        "es": "Mostrar filtro de etiquetas",
+        "fr": "Afficher le filtrage par balises",
+        "it": "Mostra filtro tag",
+        "ja": "タグによる絞り込みを表示する",
+        "nl": "Tag-filtering tonen",
+        "pt-BR": "Exibir a filtragem de tags",
+        "zh-CN": "显示标签筛选",
+        "zh-TW": "顯示標籤篩選條件"
+      }
+    },
+    {
+      "type": "header",
+      "content": {
+        "de": "Seitennummerierung",
+        "en": "Pagination",
+        "es": "Paginación",
+        "fr": "Pagination",
+        "it": "Impaginazione",
+        "ja": "ページネーション",
+        "nl": "Paginering",
+        "pt-BR": "Paginação",
+        "zh-CN": "分页",
+        "zh-TW": "分頁"
+      }
+    },
+    {
+      "type": "select",
+      "id": "pagination_type",
+      "label": {
+        "de": "Seitennummerierungsart",
+        "en": "Pagination Type",
+        "es": "Tipo de paginación",
+        "fr": "Type de pagination",
+        "it": "Tipo di impaginazione",
+        "ja": "ページネーションのタイプ",
+        "nl": "Pagineringstype",
+        "pt-BR": "Tipo de paginação",
+        "zh-CN": "分页类型",
+        "zh-TW": "分頁類型"
+      },
+      "default": "numbers",
+      "options": [
+        {
+          "value": "numbers",
+          "label": {
+            "de": "Nummerierte Seiten",
+            "en": "Numbered pages",
+            "es": "Páginas numeradas",
+            "fr": "Pages numérotées",
+            "it": "Pagine numerate",
+            "ja": "番号付きページ",
+            "nl": "Genummerde pagina's",
+            "pt-BR": "Páginas numeradas",
+            "zh-CN": "已编号页面",
+            "zh-TW": "已編號的頁面"
+          }
+        },
+        {
+          "value": "show_more",
+          "label": {
+            "de": "Schaltfläche \"Mehr anzeigen\"",
+            "en": "\"View more\" button",
+            "es": "Botón \"Ver más\"",
+            "fr": "Bouton « Afficher plus »",
+            "it": "Pulsante \"Visualizza altro\"",
+            "ja": "[詳細を表示する] ボタン",
+            "nl": "Knop 'Meer weergeven'",
+            "pt-BR": "Botão \"ver mais\"",
+            "zh-CN": "“查看详细信息”按钮",
+            "zh-TW": "「檢視更多」按鈕"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

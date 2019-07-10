@@ -1,0 +1,87 @@
+{% if section.settings.code != blank %}
+<div class="grid grid--uniform" data-section-id="{{ section.id }}" data-section-type="custom-html-section">
+  <div class="grid__item {{ block_width }}">
+    <div class="page-width">
+        {{ section.settings.code }}
+    </div>
+  </div>
+</div>
+{% endif %}
+
+
+
+{% schema %}
+{
+  "name": {
+    "de": "Benutzerdefiniertes HTML",
+    "en": "Custom HTML",
+    "es": "HTML personalizado",
+    "fr": "Code HTML personnalisé",
+    "it": "HTML personalizzato",
+    "ja": "HTMLをカスタムする",
+    "nl": "Aangepaste HTML",
+    "pt-BR": "HTML personalizado",
+    "zh-CN": "自定义 HTML",
+    "zh-TW": "自訂 HTML"
+  },
+  "class": "index-section custom-html-section",
+  "settings": [
+    {
+      "type": "html",
+      "id": "code",
+      "label": {
+        "de": "Benutzerdefiniertes HTML",
+        "en": "Custom HTML",
+        "es": "HTML personalizado",
+        "fr": "Code HTML personnalisé",
+        "it": "HTML personalizzato",
+        "ja": "HTMLをカスタムする",
+        "nl": "Aangepaste HTML",
+        "pt-BR": "HTML personalizado",
+        "zh-CN": "自定义 HTML",
+        "zh-TW": "自訂 HTML"
+      },
+      "default": {
+        "de": "<div style='text-align:center;'><h2>Formatieren Sie Ihren Text mit HTML, damit er leichter lesbar ist.</h2>Mit diesem Text können Sie Ihre Kunden über Ihre Marke informieren.</div>",
+        "en": "<div style='text-align:center;'><h2>Use HTML to format your text so it can be easily read.</h2>This text can be used to share information about your brand with customers.</div>",
+        "es": "<div style='text-align:center;'><h2>Usa HTML para formatear tu texto para que se pueda leer fácilmente</h2>. Este texto se puede usar para compartir información sobre tu marca con los clientes.</div>",
+        "fr": "<div style='text-align:center;'><h2>Utilisez le code HTML pour formater votre texte afin qu'il puisse être facilement lu.</h2>Vous pouvez utiliser ce texte pour partager des informations sur votre marque avec les clients.</div>",
+        "it": "<div style='text-align:center;'><h2>Utilizza l'HTML per formattare il tuo testo così che sia facilmente leggibile.</h2>Questo testo può essere usato per condividere le informazioni sul tuo brand con i clienti.</div>",
+        "ja": "<div style='text-align:center;'><h2>テキストが読みやすくなるように、HTMLを使用して書式設定します。</h2>このテキストは、あなたのブランドに関する情報をお客様と共有するために使用できます。</div>",
+        "nl": "<div style='text-align:center;'><h2>Gebruik HTML om uw tekst op te maken, zodat deze makkelijk leesbaar is.</h2>Deze tekst kan worden gebruikt om informatie over uw merk met klanten te delen.</div>",
+        "pt-BR": "<div style='text-align:center;'><h2>Use HTML para formatar seu texto, assim ele pode ser lido com facilidade.</h2> Esse texto pode ser usado para compartilhar informações sobre sua marca com os clientes.</div>",
+        "zh-CN": "<div style='text-align:center;'><h2>使用 HTML 设置文本格式，以便轻松阅读。</h2>此文本可用于与客户共享有关您的品牌的信息。</div>",
+        "zh-TW": "<div style='text-align:center;'><h2>使用 HTML 來設定文字格式，使文字易於閱讀。</h2>您可以利用此段文字跟客戶分享品牌資訊。</div>"
+      }
+    }
+  ],
+  "presets": [
+    {
+      "name": {
+        "de": "Benutzerdefiniertes HTML",
+        "en": "Custom HTML",
+        "es": "HTML personalizado",
+        "fr": "Code HTML personnalisé",
+        "it": "HTML personalizzato",
+        "ja": "HTMLをカスタムする",
+        "nl": "Aangepaste HTML",
+        "pt-BR": "HTML personalizado",
+        "zh-CN": "自定义 HTML",
+        "zh-TW": "自訂 HTML"
+      },
+      "category": {
+        "de": "Advanced",
+        "en": "Advanced",
+        "es": "Avanzado",
+        "fr": "Advanced",
+        "it": "Advanced",
+        "ja": "高度",
+        "nl": "Advanced",
+        "pt-BR": "Advanced",
+        "zh-CN": "高级版",
+        "zh-TW": "Advanced"
+      }
+    }
+  ]
+}
+{% endschema %}
