@@ -53,3 +53,104 @@ msg=f'{first}  [{last}] is a coder'
 print(message)
 
 print(msg)
+
+
+
+
+
+course='Python for Beginners'
+
+print(len(course))
+
+course=course.upper()
+
+
+print(course)
+
+print(course.find('BEGINN'))
+
+print(course.replace('BEGINNERS','absolute'))
+
+
+print('PYTHON' in course)
+
+print(10//3)
+print(10**3)
+x=3
+print(++x)
+print(x)
+
+import math
+
+print(math.ceil(2.9))
+x=2.9
+print(round(x))
+
+
+print(abs(-2.9))
+
+swimming_pools=False
+is_cold=True
+
+if swimming_pools:
+    print("pass out")
+    print("Drank")
+elif is_cold:
+    print("sub zero")
+else:
+    print("now open your mind and listen me kendrick")
+
+    price = 1000000
+    has_good_credit = True
+
+    if has_good_credit:
+        down_payment = .1 * price
+
+    else:
+        down_payment = .2 * price
+
+    print(f"Down Payment: ${down_payment}")
+
+    has_high_income = True
+
+    has_good_credit = False
+
+    isnot_badass = False
+
+    if has_high_income or has_good_credit:
+        print("eligible")
+    elif not isnot_badass:
+        print("eligible because savage")
+
+temperature=666
+
+if temperature!=30:
+    print("it's sunny")
+
+else:
+    print("not sunny")
+
+    name = "Kjhdnfjsknfjdfnskdnfkdsnfksdnfdsfjkdnsjfnkds"
+
+    if len(name) < 3:
+        print("name too short")
+
+    elif len(name) > 50:
+        print("name too long")
+i=1
+while i<=5:
+    print('*'*i)
+    i+=1
+print("Done")
+
+secret_answer=412
+guess_count=0
+guess_limit=3
+while guess_count<guess_limit:
+    guess=int(input('Guess:'))
+    guess_count+=1
+    if guess==secret_answer:
+        print("you won")
+        break
+else:
+    print('wrong')
