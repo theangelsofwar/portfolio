@@ -154,3 +154,171 @@ while guess_count<guess_limit:
         break
 else:
     print('wrong')
+
+    command = ""
+
+    started = False
+
+    while True:
+        command = input("> ").lower()
+        if command == "start":
+            if started:
+                print("car already started, no need to toggle")
+
+            elif not started:
+                started = True;
+                print("start")
+        elif command == "stop":
+            if not started:
+                print("car already stopped")
+            else:
+                started = False
+                print("stop")
+        elif command == "quit":
+            break
+        elif command == "help":
+            print("""
+            start-to start
+            stop-to stop
+            quit-to quit
+
+            """)
+        else:
+            print("sorry i can't understand your accent")
+
+for item in range(4, 9, 2):
+    print(item)
+prices=[10,20,30]
+total=0
+for pri in prices:
+    total+=pri
+
+
+print(f"Total:{total}")
+
+
+for x in range(4):
+    for y in range(7):
+     print(f'({x},{y})')
+
+
+
+numbers=[5,2,5,2,2]
+
+for x in numbers:
+    result=''
+    for j in range(x):
+        result+='x'
+    print(result)
+
+names=['A','Gie','Changpagne']
+print(names[-1])
+names[0]='-A'
+print(names[2:])
+print(names)
+
+numbers=[3,6,4,2,10]
+
+max=numbers[0]
+for number in numbers:
+    if number>max:
+        max=number
+
+
+print(max)
+
+matrix=[[1,2,3],
+        [4,5,6],
+        [7,8,9]]
+
+
+
+
+matrix[0][1]=20
+
+print(matrix)
+
+
+for row in matrix:
+    for element in row:
+        print(element)
+
+numbers=[5,2,7,3,7,2,1,4,2]
+print(numbers)
+
+numbers.insert(4,20)
+print(numbers)
+
+numbers.remove(2)
+
+print(numbers)
+
+
+numbers.pop()
+
+print(numbers)
+
+print(50 in numbers)
+
+print(numbers.count(2))
+
+
+print(numbers.sort())
+print(numbers)
+
+
+print(numbers.copy())
+numbers2=numbers.copy()
+print(numbers2)
+
+
+liss=[2,1,3,1,4,1,2,3]
+
+for e in liss:
+    count=liss.count(e)
+    while count>1:
+        liss.remove(e)
+        count=liss.count(e)
+liss.sort()
+print(liss)
+
+
+numbers=(1,2,3)
+
+
+coordinates=(1,2,3)
+
+x,y,z=coordinates
+
+print(x)
+
+
+customer={
+
+
+
+    "name":"John Smith",
+    "age":30,
+    "is_verified":True
+
+}
+
+customer["name"]="Smithsonian"
+customer["agency"]="Next Management"
+print(customer.get("is_verified"))
+print(customer.get("agency"))
+print(customer.get("birthday","Jan 1, 1980"))
+
+phone=input("Phone: ")
+digits_mapping={
+    "1": "One",
+    "2": "Two",
+    "3": "Three",
+    "4": "Four"
+
+}
+output=""
+for ch in phone:
+    output+=digits_mapping.get(ch,"!")
+
+print(output)
