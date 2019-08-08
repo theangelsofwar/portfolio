@@ -322,3 +322,135 @@ for ch in phone:
     output+=digits_mapping.get(ch,"!")
 
 print(output)
+
+
+
+
+
+
+
+def greet_user(firstname,lastname):
+    print(f'Hi there {firstname} {lastname}!')
+    print('Welcome to location')
+
+
+print("Start, what is your first and last name")
+greet_user(firstname=input(),lastname=input())
+print("Finished")
+
+
+def square(number):
+    return (number*number)
+
+
+
+
+print(square(5))
+
+
+def emoji_converter(message):
+    words = message.split(' ')
+    emojis = {
+        ":):": ":)",
+        ":(": ":("
+    }
+    output = ""
+    for word in words:
+        output += emojis.get(word, word) + " "
+    return output
+
+
+
+message=input(">")
+print(emoji_converter(message))
+
+
+try:
+    age=int(input('Age: '))
+    income=100000
+    risk=income/age
+    print(age)
+except ZeroDivisionError:
+    print('Minimum age of 10 to have income')
+except ValueError:
+    print('Invalid Values')
+
+
+#reminder
+#of a commentator
+print("flight")
+
+
+class Point:
+    def __init__(self,x,y):
+        self.x=x
+        self.y=y
+    def move(self):
+        print("move")
+
+    def draw(self):
+        print("draw")
+
+
+
+point1=Point(5,60)
+point1.draw()
+
+point1.x=10
+point1.y=20
+print(point1.x)
+point1.draw()
+
+point2=Point(23,12)
+point2.x=1
+print(point2.x)
+
+
+class Person:
+    def __init__(self,name):
+        self.name=name
+
+
+    def talk(self):
+        print(f"Hello, I am {self.name}")
+
+
+
+john=Person("Michael Well Made It")
+print(john.name)
+john.talk()
+
+
+
+class Mammal:
+    def walk(self):
+        print("Walk")
+
+
+class Dog(Mammal):
+    def bark(self):
+        print("arf")
+
+
+class Cat(Mammal):
+    def be_annoying(self):
+        print("annoying")
+
+
+dog1=Dog()
+dog1.walk()
+dog1.bark()
+
+
+cat1=Cat()
+cat1.be_annoying()
+cat1.walk()
+
+
+
+import converters
+from converters import lbs_to_kg
+
+print(converters.kg_to_lbs(50))
+print(converters.lbs_to_kg(110))
+
