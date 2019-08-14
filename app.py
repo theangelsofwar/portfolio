@@ -454,3 +454,66 @@ from converters import lbs_to_kg
 print(converters.kg_to_lbs(50))
 print(converters.lbs_to_kg(110))
 
+
+
+from util import find_max
+
+numbers=[10,3,6,1]
+maxim=find_max(numbers)
+print(maxim)
+
+
+
+from ecommerce.shipping import calc_shipping
+
+
+
+
+import random
+
+
+members=['John','Drogon','Khaleesi', 'Vittoria', 'Eve','Iver']
+leader=random.choice(members)
+print(leader)
+for i in range(10):
+    print(random.random())
+
+
+
+import random
+
+
+class Dice:
+    def roll(self):
+        first=random.randint(1,6)
+        second=random.randint(1,6)
+        return first,second
+
+
+
+d1=Dice()
+print(d1.roll())
+
+
+
+def find_max(numbers):
+    maxim=numbers[0]
+    #for number in numbers:
+        #if number>maxim:
+           # max=number
+
+    return max(numbers)
+
+
+
+
+from pathlib import Path
+
+
+#Absolute path
+#relative path
+
+path=Path()
+print(path.exists)
+for file in path.glob('*.py'):
+    print(file)
