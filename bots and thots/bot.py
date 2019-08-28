@@ -10,7 +10,7 @@ import configparser
 
 class InstaBot:
 
-    def __init__(self,username=None,password)=None:
+    def __init__(self,username=None,password=None):
         """
         Initialize instance of InstagramBot class. 
 
