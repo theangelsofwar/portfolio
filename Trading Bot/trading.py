@@ -69,4 +69,57 @@ class Trading:
 
 
     def __init__(self,logs_to_cloud):
+        self.logs=Logs(name="trading", to_cloud=logs.to_cloud)
 
+
+    def make_trade(self,companies):
+        """
+        Executes trae for specified companies based on sentiment
+
+        """
+
+
+    #determin whether markets are open
+    market_status=self.get_market_status()
+    if not market_status:
+        self.logs.error("Not trading without market status")
+        return False
+
+    #Filter for any strategies resulting in trades
+    actionable_strategies=[]
+    market_status=self.get_market_status()
+    for company in companies:
+        strategy=self.get_strategy(company, market_status)
+        if stategy["action"]!="hold":
+            actionable_strategies.append(strategy)
+        else:
+            self.logs.warn("Dropping strategy: %s"%strategy)
+
+
+    if not actionable_strategies:
+        self.logs.warn("No actionable strategies for trading")
+        return False
+
+
+    #calculate budget per strategy
+    balance=self.get_balace()
+    budget=self.get_budget(balance, len(actionable_strategies))
+
+
+    if not budget:
+        self.logs.warn("No budget for trading: %s %s %s"%(budget, balance, actionable_strategies))
+        return False
+
+
+    self.logs.debug("Using budget: %s x %s"%len(actionable_strategies),budget))
+
+
+    #Trader Handler for each strategy
+    success=Truefor strategy in actionable_strategies:
+    ticker=strategy["ticker"]
+    action=stratey["action"]
+
+
+    #Execute Strategy
+    if action=="bull":
+        
