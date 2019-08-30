@@ -39,3 +39,34 @@ TRADEKING_API_URL="https://api.trdeking.com/v1/%s.json"
 
 #sml namespace for FIXML requests
 FIXML_NAMESPACE="https://www.fixprotocol.org/FIXML-5-9-SP2"
+
+#http headers for FIXML requests
+FIXML_HEADERS={"Content_Type":"text/xml"}
+
+#amount of cash in dollars to hold from being spent
+CASH_HOLD=1000
+
+#fraction of stock price at which to set order limits
+LIMIT_FRACTION=.1
+
+#delay in seconds for second leg of trade
+ORDER_DELAY_S=30*60
+
+#Blacklisted stock ticker symboles, this will avoid insider trading which is illegal duh
+TICKER_BLACKLIST={"GOOG","GOOGL"}
+
+#Using NYSE and NASDAQ, eastern timezone(wake up at 4am pacific to get the party going)
+MARKET_TIMEZONE=timezone("US/Eastern")
+
+#filename pattern for historical market data
+MARKET_DATA_FILE="market_data/%s_%s.txt"
+
+
+class Trading:
+    """
+    Makes the trades
+    """
+
+
+    def __init__(self,logs_to_cloud):
+
