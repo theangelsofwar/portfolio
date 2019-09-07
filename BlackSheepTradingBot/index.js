@@ -29,4 +29,4 @@ function tweetScheduler(){
     tweet(randomNumber)
 }
 
-setInterval(tweetScheduler, hourly);
+setInterval(tweetScheduler, tenSeconds);
