@@ -26,7 +26,8 @@ function tweet(txt) {
 
 function tweetScheduler(){
     var randomNumber = Math.floor(Math.random()*1000)
+    
     tweet(randomNumber)
 }
 
-setInterval(tweetScheduler, tenSeconds);
+setInterval(tweetScheduler, hourly);
